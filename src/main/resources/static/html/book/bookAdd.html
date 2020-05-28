@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>用户添加</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 引入elementui样式 -->
+<link rel="stylesheet" href="/third/elementui/theme-chalk/index.css"
+	type="text/css">
+<style>
+	.box-card {
+    width: 480px;
+    margin-left: 200px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+	<div id="app">
+		<el-card class="box-card" shadow="hover">
+		<h3>填写图书信息</h3>
+		<el-form ref="form" :model="form" label-width="80px">
+			<el-form-item label="id">
+    			<el-input v-model="form.id"></el-input>
+  			</el-form-item>
+  			<el-form-item label="书名	">
+    			<el-input v-model="form.title" autocomplete="off"></el-input>
+  			</el-form-item>
+			<el-form-item label="作者">
+				<el-input v-model="form.author" autocomplete="off"></el-input>
+			</el-form-item>
+  			<el-form-item label="时间">
+    			<el-col :span="11">
+      				<el-form-item prop="postdate">
+        			<el-date-picker type="date" placeholder="选择日期" 
+        			v-model="form.postDate" style="width: 100%;"
+        			value-format="yyyy-MM-dd"></el-date-picker>
+      				</el-form-item>
+    			</el-col>
+  			</el-form-item>
+
+  			<el-form-item>
+    			<el-button type="primary" @click="onSubmit">提交</el-button>
+  			</el-form-item>
+		</el-form>
+		</el-card>
+	</div>
+	<!-- 引入vue,elementui组件库 -->
+	<script type="text/javascript" src="/third/vue/vue.js"></script>
+	<script type="text/javascript" src="/third/elementui/index.js"></script>
+	<script src="/third/axios/axios.min.js"></script>
+	<script type="text/javascript">
+	new Vue({
+		el : '#app',
+		data() {
+		      return {
+		    	  form: {
+		    		  id: '',
+                      title: '',
+                      author: '',
+                      postDate: ''
+		            }
+		      };
+		    },
+		 methods: {
+		 	onSubmit() {
+		 		this.submitData();
+		        },
+		        submitData(){
+			    	  var _self=this;
+			    	  axios({
+			    		  method: 'post',
+			    		  url: '/save',
+			    		  data: _self.form
+			    		}).then(function(res){
+			    			console.log(res);
+			    			var result=res.data;
+			    			if(result.state==1){
+			    				if(result.is_redirect== true){
+			    					//向父窗口发送消息
+			    					 window.parent.postMessage({
+			    				            cmd: 'redirect',
+			    				            //父窗口中导航栏下标,跳转地址
+			    				            params: {
+			    				            	activeIndex: 'user-list',
+			    				            	iframeUrl: '/html/book/bookList.html'
+			    				            }
+			    				        }, '*');
+			    				}
+			    			}else{
+			    				alert('添加失败');
+			    			}
+			    			
+		                }).catch(function(res){
+		                    console.log(res);
+		                });
+			      }
+		      }
+	})
+	</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<html>
+<head>
+<title>主页</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 引入elementui样式 -->
+<link rel="stylesheet" href="/third/elementui/theme-chalk/index.css"
+	type="text/css">
+<link rel="stylesheet" href="/css/layout.css" type="text/css">
+</head>
+<body>
+	<div id="app">
+		<el-container class="containerStyle">
+		<el-header class="headerStyle">
+
+		</el-header>
+		<el-container class="containerStyle">
+		<el-aside class="asideStyle" width="200px">
+		<!-- 侧边导航栏菜单-->
+		<el-menu :default-active="activeIndex"
+		background-color="#FFFFFF"
+      	text-color="#24292e">
+			<!-- 固定一级菜单 -->
+			<el-menu-item index="default" @click="open(mainUrl)">
+				<i class="el-icon-warning"></i>网站简介
+			</el-menu-item>
+			
+			<!-- 一级菜单组 -->
+			<el-submenu :index="firstMenu.id" v-for="firstMenu in menus" :key="firstMenu.id">
+			<!-- 一级菜单标题 -->
+			<template slot="title">
+		 	<i :class="firstMenu.iconClass"></i>{{ firstMenu.name }}
+		 	</template>
+		 	<!-- 二级菜单 -->
+		 	<el-menu-item v-for="subMenu in firstMenu.children" :index="subMenu.id"
+			:key="subMenu.id" @click="open(subMenu.url)">
+			{{subMenu.name }}
+			</el-menu-item>
+		</el-submenu>
+		</el-menu>
+		</el-aside>
+		<el-main class="mainStyle">
+			<iframe class="iframeStyle" :src="iframeUrl"></iframe>
+		</el-main>
+		</el-container>
+		
+		</el-container>
+		</div>
+		<!-- 引入vue,elementui组件库 -->
+		<script type="text/javascript" src="/third/vue/vue.js"></script>
+		<script type="text/javascript" src="/third/elementui/index.js"></script>
+		<script type="text/javascript" src="/js/layout.js"></script>
+
+</body>
+</html>

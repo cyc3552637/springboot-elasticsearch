@@ -1,0 +1,190 @@
+<html>
+<head>
+<title>用户列表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 引入elementui样式 -->
+<link rel="stylesheet" href="/third/elementui/theme-chalk/index.css"
+	type="text/css">
+<style>
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+</style>
+</head>
+<body>
+	<div id="bookList-app" style="text-align: center;">
+		<text class="title">书名：</text>
+		<input v-model="searchtitle" placeholder="请输入书名">
+		<button type="primary" class="primary" @click="querybytitle()">书名检索</button>
+		<text class="author">作者：</text>
+		<input v-model="searchauthor" placeholder="请输入作者名">
+		<button type="primary" class="primary" @click="querybyauthor()">作者名检索</button>
+
+    <el-table
+    	:data="tableData"
+    	style="width: 100%"
+    	:cell-style="textAlign"
+    	:header-cell-style="textAlign">
+    <el-table-column
+      :prop="header.prop"
+      :label="header.label"
+      :width="header.width" 
+      v-for="header in tableHeader">
+    </el-table-column>
+		<el-table-column label="操作">
+			<template slot-scope="scope">
+				<el-button
+						size="mini"
+						type="danger"
+						@click="handleDelete(scope.$index, scope.row)">删除</el-button>
+			</template>
+		</el-table-column>
+  </el-table>
+
+	</div>
+	<!-- 引入vue,elementui组件库 -->
+	<script type="text/javascript" src="/third/vue/vue.js"></script>
+	<script type="text/javascript" src="/third/elementui/index.js"></script>
+	<script src="/third/axios/axios.min.js"></script>
+	<script type="text/javascript">
+	new Vue({
+		el : '#bookList-app',
+		 methods: {
+			 querybytitle() {
+                 var _self=this;
+                 axios({
+                     method: 'get',
+                     url: '/book/'+this.searchtitle,
+                     params: {
+                     }
+                 }).then(function(res){
+                     console.log(res);
+                     _self.tableData=res.data;
+                 }).catch(function(res){
+                     console.log(res);
+                 });
+			      },
+             querybyauthor() {
+                 var _self=this;
+                 axios({
+                     method: 'get',
+                     url: '/book/0/5/'+this.searchauthor,
+                     params: {
+                     }
+                 }).then(function(res){
+                     console.log(res);
+                     _self.tableData=res.data;
+                 }).catch(function(res){
+                     console.log(res);
+                 });
+             },
+		      getData(){
+		    	  var _self=this;
+		    	  axios({
+		    		  method: 'get',
+		    		  url: '/book/findall',
+		    		  params: {
+		    		  }
+		    		}).then(function(res){
+		    			console.log(res);
+		    			_self.tableData=res.data;
+	                }).catch(function(res){
+	                    console.log(res);
+	                });
+		      },
+             handleDelete(index, row) {
+                 console.log(index);
+                 console.log(row);
+                 var _self=this;
+                 _self.openConfirm(row);
+
+             },
+             openConfirm(row) {
+                 var _self=this;
+                 _self.$confirm('此操作将永久删除图书: '+row.title, '是否继续?', '警告', {
+                     confirmButtonText: '确定',
+                     cancelButtonText: '取消',
+                     type: 'warning'
+                 }).then(() => {
+                     axios({
+                         method: 'post',
+                         url: '/delete/'+row.id,
+                     }).then(function(res){
+                         console.log(res);
+                         if(res.status==200){
+                             if(res.data.state==1){
+                                 _self.$message({
+                                     type: 'success',
+                                     message: '删除成功!'
+                                 });
+                                 _self.getData();
+                             }else{
+                                 _self.$message({
+                                     type: 'error',
+                                     message: '服务器出错!'
+                                 });
+                             }
+                         }else{
+                             _self.$message({
+                                 type: 'error',
+                                 message: 'http消息头出错!'
+                             });
+                         }
+                     }).catch(function(res){
+                         console.log(res);
+                     });
+                     return;
+                 }).catch(() => {
+                     _self.$message({
+                         type: 'info',
+                         message: '已取消删除'
+                     });
+                 });
+             }
+		    },
+
+		    data() {
+		      return {
+		    	textAlign:{
+		    		textAlign:"center"
+		    	},
+				  searchtitle:"",
+                  searchauthor:"",
+		    	tableHeader:[
+		    	   {
+		    		prop:"id",
+		    		label:"编号",
+		    		width:""
+		    	   },
+		    	   {
+			    	prop:"title",
+			    	label:"书名",
+			    	width:""
+			        },
+			        {
+				    prop:"author",
+				    label:"作者",
+				    width:""
+				    },
+				    {
+					prop:"postDate",
+					label:"日期",
+					width:""
+					}
+
+		    	],
+		        tableData: []
+		      }
+		    },
+        created(){
+            this.getData();
+        }
+	})
+	</script>
+
+</body>
+</html>

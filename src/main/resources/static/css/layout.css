@@ -1,0 +1,53 @@
+body {
+	margin: 0px;
+}
+
+.containerStyle {
+	width: 100%;
+	height: 100%
+}
+
+.asideStyle {
+	background-color: #FFFFFF;
+	color: #24292e;
+	text-align: center;
+}
+
+.headerStyle {
+	background-color: #24292e;
+	color: #FFFFFF;
+	line-height: 60px;
+	text-align: center;
+}
+
+.mainStyle {
+	background-color: #FFFFFF;
+	color: #24292e;
+	text-align: center;
+	margin: 0;
+	padding: 0px;
+}
+
+.headerStyle div {
+	display: inline;
+	text-align: center;
+}
+
+.iframeStyle {
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+.author {
+	float: right;
+}
+
+.author-img {
+	width: 20px;
+	height: 20px;
+}
+
+.author-github {
+	cursor: pointer;
+}
