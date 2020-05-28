@@ -6,4 +6,6 @@ vue 2.5.13
   
 Element-ui 2.12.0  
   
+elasticsearch-6.2.2  
+  
 web and service is not separate,use springboot operate ElasticSearch's add/delete/query
